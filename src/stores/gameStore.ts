@@ -1,5 +1,5 @@
 import { defineStore } from 'pinia'
-import { ref, computed, watch } from 'vue' // Добавили watch
+import { ref, computed, watch } from 'vue'
 import { factsData, allNames, type GirlFact } from '../data/girls'
 import { type User } from '../data/users'
 
@@ -12,7 +12,6 @@ export const useGameStore = defineStore('game', () => {
   const isError = ref<boolean>(false)
   const availableFacts = ref<GirlFact[]>([])
 
-  // --- 1. ВОССТАНОВЛЕНИЕ ДАННЫХ ПРИ ЗАГРУЗКЕ ---
   const savedState = localStorage.getItem('sharkSmileState')
   if (savedState) {
     try {
@@ -28,7 +27,6 @@ export const useGameStore = defineStore('game', () => {
     }
   }
 
-  // --- 2. АВТОСОХРАНЕНИЕ ПРИ ЛЮБЫХ ИЗМЕНЕНИЯХ ---
   watch(
     [currentUser, mood, currentFact, currentOptions, correctAnswer, availableFacts],
     () => {
@@ -42,14 +40,15 @@ export const useGameStore = defineStore('game', () => {
       }
       localStorage.setItem('sharkSmileState', JSON.stringify(stateToSave))
     },
-    { deep: true } // deep: true нужен, чтобы следить за изменениями внутри массивов
+    { deep: true }
   )
 
+  // ИСПРАВЛЕНО: Добавлены "!" для утверждения, что элементы существуют
   const shuffleArray = <T>(array: T[]): T[] => {
     const newArr = [...array]
     for (let i = newArr.length - 1; i > 0; i--) {
       const j = Math.floor(Math.random() * (i + 1));
-      [newArr[i], newArr[j]] = [newArr[j], newArr[i]]
+      [newArr[i], newArr[j]] = [newArr[j]!, newArr[i]!]
     }
     return newArr
   }
@@ -62,11 +61,14 @@ export const useGameStore = defineStore('game', () => {
     nextRound()
   }
 
+  // ИСПРАВЛЕНО: Добавлена проверка randomName на undefined
   const getRandomOptions = (correctName: string): string[] => {
     const options = new Set<string>([correctName])
     while (options.size < 4) {
       const randomName = allNames[Math.floor(Math.random() * allNames.length)]
-      options.add(randomName)
+      if (randomName) {
+        options.add(randomName)
+      }
     }
     return Array.from(options).sort(() => Math.random() - 0.5)
   }
@@ -83,10 +85,7 @@ export const useGameStore = defineStore('game', () => {
 
   const checkAnswer = (selectedName: string): void => {
     if (selectedName === correctAnswer.value) {
-      // Плюс 12.5 за каждый из 8 вопросов
       mood.value += 12.5
-      console.log("Текущее настроение (mood):", mood.value)
-      
       if (mood.value < 100) {
         nextRound()
       }
@@ -96,17 +95,15 @@ export const useGameStore = defineStore('game', () => {
     }
   }
 
-  // Смягчаем условие победы, чтобы избежать проблем с 99.999
   const isGameWon = computed<boolean>(() => Math.round(mood.value) >= 100)
 
-  // Добавим функцию выхода, если вдруг кто-то захочет сбросить прогресс
   const logout = () => {
     currentUser.value = null
     localStorage.removeItem('sharkSmileState')
   }
 
   return {
-    currentUser, mood, currentFact, currentOptions,
+    currentUser, mood, currentFact, currentOptions, availableFacts,
     isError, isGameWon, initGame, nextRound, checkAnswer, logout
   }
 })
