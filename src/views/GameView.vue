@@ -166,7 +166,7 @@ const goToGift = () => {
           </div>
           
           <p class="victory-text">Настроение на максимуме! Ты отлично знаешь команду.</p>
-          <button @click="goToGift" class="video-btn">Смотреть видео 🎬</button>
+          <!-- <button @click="goToGift" class="video-btn">Смотреть видео 🎬</button> -->
         </div>
       </div>
       
