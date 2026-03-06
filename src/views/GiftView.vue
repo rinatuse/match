@@ -24,10 +24,10 @@ const goBack = () => {
         <video 
           controls 
           autoplay
+          playsinline
           class="main-video"
-          poster="https://via.placeholder.com/640x360?text=С+8+Марта!"
         >
-          <source src="https://www.w3schools.com/html/mov_bbb.mp4" type="video/mp4">
+          <source src="/march.MP4" type="video/mp4">
           Ваш браузер не поддерживает видео.
         </video>
       </div>
@@ -35,6 +35,8 @@ const goBack = () => {
       <p class="congrats-text">
         Пусть этот день будет полон улыбок и радости! 🌸
       </p>
+      
+      <button @click="goBack" class="back-btn">Вернуться к хомяку 🐹</button>
     </div>
   </div>
 </template>
@@ -91,6 +93,7 @@ h2 { color: #e91e63; margin-bottom: 20px; }
   cursor: pointer;
   font-weight: bold;
   transition: all 0.2s;
+  width: 100%;
 }
 
 .back-btn:hover {
