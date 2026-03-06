@@ -35,8 +35,6 @@ const goBack = () => {
       <p class="congrats-text">
         Пусть этот день будет полон улыбок и радости! 🌸
       </p>
-      
-      <button @click="goBack" class="back-btn">Вернуться к хомяку 🐹</button>
     </div>
   </div>
 </template>
