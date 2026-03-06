@@ -27,7 +27,7 @@ const goBack = () => {
           playsinline
           class="main-video"
         >
-          <source src="/march.MP4" type="video/mp4">
+          <source src="/march.mp4" type="video/mp4">
           Ваш браузер не поддерживает видео.
         </video>
       </div>
